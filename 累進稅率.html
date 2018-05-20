@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>累進稅率</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1"
+        crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-9 text-center">
+                <h3>稅額試算</h3>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="txtInput" class="col-2 col-form-label text-right">所得淨額</label>
+            <div class="input-group col-6">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <input type="text" class="form-control" id="txtInput" />
+            </div>
+            <div class="col-1">
+                <button class="btn btn-primary" id="cmdInput">
+                    <i class="fas fa-calculator"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="txtTaxRate" class="col-3 col-form-label text-right">稅率</label>
+        <div class="input-group col-5">
+            <input type="text" class="form-control" readonly maxlength="5" id="txtTaxRate" />
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <i class="fas fa-percent"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="form-group row">
+        <label for="txtTaxAdjustment" class="col-3 col-form-label text-right">累進差額</label>
+        <div class="input-group col-5">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+            </div>
+            <input type="text" class="form-control" readonly id="txtTaxAdjustment" />
+        </div>
+    </div>
+    </div>
+    <div class="form-group row">
+        <label for="txtTaxAmount" class="col-3 col-form-label text-right">應納稅額</label>
+        <div class="input-group col-5">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+            </div>
+            <input type="text" class="form-control" readonly id="txtTaxAmount" />
+        </div>
+    </div>
+
+    <script>
+        var money = [0, 540000, 1210000, 2420000, 4530000, 10310000];
+        var rates = [0.05, 0.12, 0.2, 0.3, 0.4, 0.45];
+        var diffs = [0, 37800, 134600, 376600, 829600, 1345100];
+        var rate = function (x) {
+            for (i = 0; i < money.length; i++) {
+                if (i == money.length - 1 && x > money[i]) return rates[i];
+                if (x >= money[i] && x <= money[i + 1]) return rates[i];
+            }
+        }
+
+        var diff = function (x) {
+            return diffs[rates.indexOf(x)];
+        }
+
+        var taxamount = function (m, taxrate, taxadjustment) {
+            return Math.floor(m * taxrate - taxadjustment);
+        }
+        
+        document.getElementById("cmdInput").onclick = function () {
+            document.getElementById("txtTaxRate").value = rate(document.getElementById("txtInput").value);
+            document.getElementById("txtTaxAdjustment").value = diff(parseFloat(document.getElementById("txtTaxRate").value));
+            document.getElementById("txtTaxAmount").value = taxamount(document.getElementById("txtInput").value,document.getElementById("txtTaxRate").value,document.getElementById("txtTaxAdjustment").value)
+        }
+    </script>
+</body>
+
+</html>
